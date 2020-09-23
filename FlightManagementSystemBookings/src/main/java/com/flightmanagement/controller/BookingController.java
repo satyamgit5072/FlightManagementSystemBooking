@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.flightmanagement.dto.Booking;
 import com.flightmanagement.dto.Passenger;
+import com.flightmanagement.exception.BadRequestException;
 import com.flightmanagement.exception.ResourceNotFoundException;
 import com.flightmanagement.service.BookingService;
 import com.flightmanagement.service.PassengerService;
@@ -52,9 +53,14 @@ public class BookingController {
 	}
 
 	@GetMapping(value="/getAllBooking/{userId}",produces="application/json")
-	public List<Booking> getAllBooking(@PathVariable long userId)
+	public List<Booking> getAllBooking(@PathVariable long userId) throws BadRequestException
 	{
-		return bookingService.getAllBooking(userId);
+		if(!bookingService.getAllBooking(userId).isEmpty())
+		{
+			return bookingService.getAllBooking(userId);
+		}
+		throw new BadRequestException(userId+" userId does not exit");
+			
 	}
 
 	@DeleteMapping(value="/deleteBooking/{bookingId}")
@@ -66,6 +72,5 @@ public class BookingController {
 		}
 		throw new ResourceNotFoundException(bookingId+" booking id does not exit");
 	}
-	
 	
 }

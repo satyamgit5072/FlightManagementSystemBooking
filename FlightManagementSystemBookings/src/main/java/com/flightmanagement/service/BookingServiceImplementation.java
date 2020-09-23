@@ -43,8 +43,12 @@ public class BookingServiceImplementation implements BookingService {
 	@Override
 	public String deleteBooking(long bookingId) {
 		if(bookingDao.findById(bookingId).isPresent())
+		{
 			bookingDao.deleteById(bookingId);
-		return "deleted successfully";
+			return "deleted sucessfully";
+		}
+		else 
+			return "Id does not exist";
 	}
 
 }

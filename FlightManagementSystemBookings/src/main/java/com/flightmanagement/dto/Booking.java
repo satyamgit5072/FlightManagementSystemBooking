@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,7 +47,7 @@ public class Booking {
 	@NotNull(message="passengers details must be entered")
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="booking_id")
-	private List<Passenger> passengerList;
+	private List<@Valid Passenger> passengerList;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
