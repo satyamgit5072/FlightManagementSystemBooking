@@ -51,7 +51,6 @@ public class Booking {
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
-	@NotNull(message="Booking Date should not be empty")
 	private Date bookingDate;
 
 	public Booking() {

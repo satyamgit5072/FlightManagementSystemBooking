@@ -1,5 +1,6 @@
 package com.flightmanagement.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class BookingController {
 	@PostMapping(value="/makeBooking")
 	public String addBooking(@Valid @RequestBody()Booking booking)
 	{
+		booking.setBookingDate(new Date());
 		for(Passenger passenger : booking.getPassengerList())
 			passengerService.addPassenger(passenger);
 		Booking b = bookingService.addBooking(booking);
@@ -43,34 +45,55 @@ public class BookingController {
 	}
 	
 	@GetMapping(value="/getBooking/{bookingId}",produces="application/json")
-	public Optional<Booking> getBooking(@PathVariable long bookingId) throws ResourceNotFoundException
+	public Optional<Booking> getBooking(@PathVariable long bookingId)
 	{
-		if(bookingService.getBooking(bookingId).isPresent())
+		Optional<Booking> booking = bookingService.getBooking(bookingId);
+		try
 		{
-		return bookingService.getBooking(bookingId);
+			if(!booking.isPresent())
+			{
+				throw new ResourceNotFoundException(bookingId+" booking id does not exit");
+			}
 		}
-		throw new ResourceNotFoundException(bookingId+" booking id does not exit");
+		catch(ResourceNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return booking;
 	}
 
 	@GetMapping(value="/getAllBooking/{userId}",produces="application/json")
-	public List<Booking> getAllBooking(@PathVariable long userId) throws BadRequestException
+	public List<Booking> getAllBooking(@PathVariable long userId)
 	{
-		if(!bookingService.getAllBooking(userId).isEmpty())
+		List<Booking> bookingList = bookingService.getAllBooking(userId);
+		try 
 		{
-			return bookingService.getAllBooking(userId);
+			if(bookingList.isEmpty())
+			{
+				throw new BadRequestException(userId+" userId does not exit");
+			}
+		} 
+		catch (BadRequestException e) {
+			e.printStackTrace();
 		}
-		throw new BadRequestException(userId+" userId does not exit");
-			
+		return bookingList;
 	}
 
 	@DeleteMapping(value="/deleteBooking/{bookingId}")
-	public String deleteBooking(@PathVariable long bookingId) throws ResourceNotFoundException
+	public String deleteBooking(@PathVariable long bookingId)
 	{
-		if(bookingService.getBooking(bookingId).isPresent())
+		Optional<Booking> booking = bookingService.getBooking(bookingId);
+		try
 		{
-		return bookingService.deleteBooking(bookingId);
+			if(!booking.isPresent())
+			{
+				throw new ResourceNotFoundException(bookingId+" booking id does not exit");
+			}
 		}
-		throw new ResourceNotFoundException(bookingId+" booking id does not exit");
+		catch(ResourceNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		return bookingService.deleteBooking(bookingId);
 	}
-	
 }

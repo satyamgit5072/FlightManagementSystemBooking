@@ -1,12 +1,10 @@
 package com.flightmanagement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -15,11 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.flightmanagement.dto.Airport;
 import com.flightmanagement.dto.Booking;
-import com.flightmanagement.dto.Flight;
 import com.flightmanagement.dto.Passenger;
-import com.flightmanagement.dto.Schedule;
 import com.flightmanagement.dto.ScheduledFlight;
 import com.flightmanagement.dto.User;
 import com.flightmanagement.service.BookingService;
@@ -32,6 +27,7 @@ class FlightManagementSystemBookingsApplicationTests {
 
 	@Autowired
 	PassengerService passengersService;
+	
 
 	@Test
 	void addBookingdetailsTest() throws ParseException {
@@ -53,29 +49,34 @@ class FlightManagementSystemBookingsApplicationTests {
 		 * passengers.add(p4);
 		 */
 
-		List<Passenger> passengerslist = bookingService.getBooking(22).get().getPassengerList();
-		User user1 = bookingService.getBooking(22).get().getUser();
-		ScheduledFlight flightschedule1 = bookingService.getBooking(22).get().getScheduledFlight();
+		List<Passenger> passengerslist = bookingService.getBooking(93).get().getPassengerList();
+		User user1 = bookingService.getBooking(92).get().getUser();
+		ScheduledFlight flightschedule1 = bookingService.getBooking(93).get().getScheduledFlight();
 		Booking book = new Booking(user1, flightschedule1, passengerslist, date1);
 		Booking book1 = bookingService.addBooking(book);
-		assertEquals(book1.getBookingId(),70);
+		
+		//assertEquals(book1.getBookingId(),101);
+		assertEquals(book1.getUser().getUserId(),user1.getUserId());
 	}
 
 	@Test
-	void getBookingTest() {
-	assertEquals(22,bookingService.getBooking(22).get().getBookingId());
+	void getBookingTest()
+	{
+		Booking booking = bookingService.getBooking(93).get();
+		assertEquals(93,booking.getBookingId());
 	}
 
 	@Test
 	void getAllBookingTest()
 	{
-		assertEquals(1,bookingService.getAllBooking(2).size());
+		List<Booking> bookingList = bookingService.getAllBooking(1);
+		assertEquals(1,bookingList.size());
 	}
 	
 	@Test
 	void deleteBookingTest()
 	{
-		String a = bookingService.deleteBooking(24);
+		String a = bookingService.deleteBooking(98);
 		System.out.println(a);
 		String b = "deleted sucessfully";
 		assertTrue(a.equals(b));
