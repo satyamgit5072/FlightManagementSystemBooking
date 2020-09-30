@@ -1,11 +1,12 @@
 package com.flightmanagement.controller;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +14,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.flightmanagement.dto.Booking;
 import com.flightmanagement.dto.Passenger;
+import com.flightmanagement.dto.ScheduledFlight;
+import com.flightmanagement.dto.User;
 import com.flightmanagement.exception.BadRequestException;
 import com.flightmanagement.exception.ResourceNotFoundException;
 import com.flightmanagement.service.BookingService;
 import com.flightmanagement.service.PassengerService;
+import com.flightmanagement.service.ScheduledFlightService;
+import com.flightmanagement.service.UserService;
 
 
 @CrossOrigin(origins = "*")
@@ -32,20 +36,26 @@ public class BookingController {
 	
 	@Autowired
 	PassengerService passengerService;
+	
+	@Autowired
+	ScheduledFlightService scheduledFlightService;
+	
+	@Autowired
+	UserService userService;
 
 	
 	@PostMapping(value="/makeBooking")
-	public String addBooking(@Valid @RequestBody()Booking booking)
+	public Booking addBooking(@Valid @RequestBody()Booking booking)
 	{
-		booking.setBookingDate(new Date());
+		booking.setBookingDate(LocalDate.now());
 		for(Passenger passenger : booking.getPassengerList())
 			passengerService.addPassenger(passenger);
-		Booking b = bookingService.addBooking(booking);
-		return "{bookingId is :" + b.getBookingId() + "}";
+		Booking bookingDone = bookingService.addBooking(booking);
+		return bookingDone;
 	}
 	
 	@GetMapping(value="/getBooking/{bookingId}",produces="application/json")
-	public Optional<Booking> getBooking(@PathVariable long bookingId)
+	public Booking getBooking(@PathVariable long bookingId)
 	{
 		Optional<Booking> booking = bookingService.getBooking(bookingId);
 		try
@@ -59,7 +69,7 @@ public class BookingController {
 		{
 			e.printStackTrace();
 		}
-		return booking;
+		return booking.get();
 	}
 
 	@GetMapping(value="/getAllBooking/{userId}",produces="application/json")
@@ -94,6 +104,29 @@ public class BookingController {
 		{
 			e.printStackTrace();
 		}
-		return bookingService.deleteBooking(bookingId);
+		String d= bookingService.deleteBooking(bookingId);
+		System.out.println(d);
+		return d;
 	}
+	
+		@GetMapping(value="/getAllScheduledFlights",produces="application/json")
+		public List<ScheduledFlight> getAllFlightSchedules()
+		{
+			List<ScheduledFlight> flightScheduleList = scheduledFlightService.getAllFlightSchedules();
+			return flightScheduleList;
+		}
+		
+		@GetMapping(value="/getFlightSchedule/{scheduleId}",produces="application/json")
+		public ScheduledFlight getFlightSchedule(@PathVariable int scheduleId)
+		{
+			Optional<ScheduledFlight> flightSchedule= scheduledFlightService.getFlightSchedule(scheduleId);
+		    return flightSchedule.get();
+		}
+		
+		@GetMapping(value="/getUser/{userId}",produces="application/json")
+		public User getUser(@PathVariable long userId)
+		{
+			Optional<User> user= userService.getUser(userId);
+		    return user.get();
+		}
 }

@@ -1,6 +1,6 @@
 package com.flightmanagement.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,10 +17,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
@@ -48,17 +44,16 @@ public class Booking {
 	@OneToMany(cascade=CascadeType.ALL)
 	@JoinColumn(name="booking_id")
 	private List<@Valid Passenger> passengerList;
-
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
-	private Date bookingDate;
+	
+	@Column(name="booking_date")
+    LocalDate bookingDate;
 
 	public Booking() {
 		super();
 	}
 
 	public Booking(User user,
-			ScheduledFlight scheduledFlight, List<Passenger> passengerList, Date bookingDate) {
+			ScheduledFlight scheduledFlight, List<Passenger> passengerList, LocalDate bookingDate) {
 		super();
 		this.user = user;
 		this.scheduledFlight = scheduledFlight;
@@ -98,11 +93,11 @@ public class Booking {
 		this.passengerList = passengerList;
 	}
 
-	public Date getBookingDate() {
+	public LocalDate getBookingDate() {
 		return bookingDate;
 	}
 
-	public void setBookingDate(Date bookingDate) {
+	public void setBookingDate(LocalDate bookingDate) {
 		this.bookingDate = bookingDate;
 	}
 

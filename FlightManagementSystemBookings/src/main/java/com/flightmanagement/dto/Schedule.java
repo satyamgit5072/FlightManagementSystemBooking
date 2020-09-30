@@ -1,6 +1,6 @@
 package com.flightmanagement.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,11 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Schedule {
@@ -26,20 +21,24 @@ public class Schedule {
     @OneToOne(cascade = {CascadeType.MERGE})
     private Airport destinationAirport;
 
-    @NotNull(message="Date should be in dd/mm/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
-    private Date arrivalTime;
+//    @NotNull(message="Date should be in dd/mm/yyyy")
+//    @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
+//    private Date arrivalTime;
 
-    @NotNull(message= "Date should be in dd/mm/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
-    private Date departureTime;
+//    @NotNull(message= "Date should be in dd/mm/yyyy")
+//    @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
+//    private Date departureTime;
+    
+    private LocalDateTime departureTime;
+    
+	private LocalDateTime arrivalTime;
 
     public Schedule() {
     }
 
-    public Schedule(Airport sourceAirport, Airport destinationAirport, Date arrivalTime, Date departureTime) {
+    public Schedule(Airport sourceAirport, Airport destinationAirport, LocalDateTime arrivalTime, LocalDateTime departureTime) {
         this.sourceAirport = sourceAirport;
         this.destinationAirport = destinationAirport;
         this.arrivalTime = arrivalTime;
@@ -70,19 +69,19 @@ public class Schedule {
         this.destinationAirport = destinationAirport;
     }
 
-    public Date getArrivalTime() {
+    public LocalDateTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(Date arrivalTime) {
+    public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public Date getDepartureTime() {
+    public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(Date departureTime) {
+    public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
     }
 
